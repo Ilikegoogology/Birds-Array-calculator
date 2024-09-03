@@ -55,7 +55,7 @@
 
         function formatResult(result) {
             const resultStr = result.toString();
-            return resultStr.length > 20 ? result.toScientificNotation() : resultStr;
+            return resultStr.length > 20 ? result.toExtendedScientificNotation() : resultStr;
         }
 
         function parseBAN(input) {
