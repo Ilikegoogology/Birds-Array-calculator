@@ -82,6 +82,30 @@ class AbsolutelyBigNum {
         return `${significand}e+${exponent}`;
     }
 
+    // Convert very large exponents to scientific notation with nested exponents
+    toExtendedScientificNotation(digits = 6) {
+        const strValue = this.toString();
+        const length = strValue.length;
+
+        if (length <= digits) {
+            return strValue;
+        }
+
+        const splitLength = 4; // Arbitrary split length for better readability
+        const parts = [];
+        let tempLength = length;
+
+        while (tempLength > digits) {
+            const chunk = Math.min(tempLength, splitLength);
+            parts.unshift(strValue.slice(-chunk));
+            strValue = strValue.slice(0, -chunk);
+            tempLength -= chunk;
+        }
+
+        parts.unshift(strValue);
+        return parts.join('e+');
+    }
+
     // Print value
     print() {
         console.log(this.toString());
@@ -102,6 +126,6 @@ class AbsolutelyBigNum {
 // Example usage:
 // let num = new AbsolutelyBigNum("2");
 // let result = num.tetrate(5);
-// console.log(result.toScientificNotation()); // This will print the result in scientific notation
+// console.log(result.toExtendedScientificNotation()); // This will print the result in extended scientific notation
 
 module.exports = AbsolutelyBigNum;
