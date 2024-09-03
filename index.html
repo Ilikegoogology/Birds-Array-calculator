@@ -41,7 +41,7 @@
             }
             const bigB = new AbsolutelyBigNum(b);
             const result = bigA.power(bigB.value);
-            return result.toString();
+            return formatResult(result);
         }
 
         function birdsArrayNested(a, b, c) {
@@ -49,7 +49,13 @@
             const bigB = new AbsolutelyBigNum(b);
             const bigC = new AbsolutelyBigNum(c);
             const inner = bigB.power(bigC.value);
-            return bigA.power(inner.value).toString();
+            const result = bigA.power(inner.value);
+            return formatResult(result);
+        }
+
+        function formatResult(result) {
+            const resultStr = result.toString();
+            return resultStr.length > 20 ? result.toScientificNotation() : resultStr;
         }
 
         function parseBAN(input) {
