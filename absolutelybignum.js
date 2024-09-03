@@ -13,41 +13,31 @@ class AbsolutelyBigNum {
 
     // Addition
     add(other) {
-        if (!(other instanceof AbsolutelyBigNum)) {
-            throw new Error("Argument must be an instance of AbsolutelyBigNum.");
-        }
+        this._checkType(other);
         return new AbsolutelyBigNum(this.value + other.value);
     }
 
     // Subtraction
     subtract(other) {
-        if (!(other instanceof AbsolutelyBigNum)) {
-            throw new Error("Argument must be an instance of AbsolutelyBigNum.");
-        }
+        this._checkType(other);
         return new AbsolutelyBigNum(this.value - other.value);
     }
 
     // Multiplication
     multiply(other) {
-        if (!(other instanceof AbsolutelyBigNum)) {
-            throw new Error("Argument must be an instance of AbsolutelyBigNum.");
-        }
+        this._checkType(other);
         return new AbsolutelyBigNum(this.value * other.value);
     }
 
     // Division
     divide(other) {
-        if (!(other instanceof AbsolutelyBigNum)) {
-            throw new Error("Argument must be an instance of AbsolutelyBigNum.");
-        }
+        this._checkType(other);
         return new AbsolutelyBigNum(this.value / other.value);
     }
 
     // Power (exponentiation)
     power(exp) {
-        if (typeof exp !== 'bigint') {
-            exp = BigInt(exp);
-        }
+        exp = this._convertToBigInt(exp);
         return new AbsolutelyBigNum(this.value ** exp);
     }
 
@@ -62,13 +52,11 @@ class AbsolutelyBigNum {
 
     // Tetration (4th hyperoperation)
     tetrate(height) {
-        if (typeof height !== 'bigint') {
-            height = BigInt(height);
-        }
-        if (height === 0n) return new AbsolutelyBigNum(BigInt(1));
+        height = this._convertToBigInt(height);
+        if (height === 0n) return new AbsolutelyBigNum(1n);
         if (height === 1n) return new AbsolutelyBigNum(this.value);
         let result = new AbsolutelyBigNum(this.value);
-        for (let i = BigInt(1); i < height; i++) {
+        for (let i = 1n; i < height; i++) {
             result = this.power(result.value);
         }
         return result;
@@ -79,15 +67,41 @@ class AbsolutelyBigNum {
         return this.value.toString();
     }
 
+    // Convert to scientific notation
+    toScientificNotation(digits = 6) {
+        const strValue = this.toString();
+        const length = strValue.length;
+
+        if (length <= digits) {
+            return strValue;
+        }
+
+        const significand = strValue.slice(0, digits);
+        const exponent = length - digits;
+
+        return `${significand}e+${exponent}`;
+    }
+
     // Print value
     print() {
         console.log(this.toString());
     }
+
+    // Private helper methods
+    _checkType(other) {
+        if (!(other instanceof AbsolutelyBigNum)) {
+            throw new Error("Argument must be an instance of AbsolutelyBigNum.");
+        }
+    }
+
+    _convertToBigInt(value) {
+        return typeof value === 'bigint' ? value : BigInt(value);
+    }
 }
 
 // Example usage:
-let num = new AbsolutelyBigNum("2");
-let result = num.tetrate(5);
-result.print(); // This will print an extremely large number
+// let num = new AbsolutelyBigNum("2");
+// let result = num.tetrate(5);
+// console.log(result.toScientificNotation()); // This will print the result in scientific notation
 
 module.exports = AbsolutelyBigNum;
